@@ -1,0 +1,439 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\documentclass{article}
+\usepackage[LGR]{fontenc}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage[english,greek]{babel}
+\usepackage{tikz}
+\usepackage{multicol}
+\usetikzlibrary{graphdrawing.trees};
+\usepackage{algpseudocode}
+\title{ΟΣ}
+\author{Ορέστης Α Μακρής}
+\date{Δεκέμβριος 2022}
+\begin{document}
+
+\section{Ασκηση 3}
+Ερώτημα 3: Διαδιεργασιακή Επικοινωνία (15 Μονάδες)
+Σε μια φαρμακοβιομηχανία υπάρχει μια γραμμή παραγωγής για τη συσκευασία φαρμάκων σε φιαλίδια, όπου λαμβάνουν χώρα οι παρακάτω εργασίες: 
+\\
+
+ \begin{itemize}
+ \itemΑνάγνωση προγραμματισμένης παραγόμενης ποσότητας φιαλιδίων με φάρμακο (Ε1)
+ \itemΠαραγωγή γυάλινων φιαλιδίων (Ε2)
+ \itemΠαραγωγή καπακιών για τα φιαλίδια (Ε3)
+ \itemΠαραγωγή ετικετών για τα φιαλίδια και χαρτόκουτα (Ε4)
+ \itemΠαραγωγή χαρτόκουτων συσκευασίας (Ε5)
+ \itemΑπολύμανση γυάλινων φιαλιδίων και καπακιών (Ε6)
+ \itemΕισαγωγή ορού στα φιαλίδια (Ε7)
+ \itemΕισαγωγή δραστικής ουσίας στα φιαλίδια (Ε8)
+ \itemΤοποθέτηση καπακιών στα φιαλίδια (Ε9)
+ \itemΚόλληση ετικετών στα φιαλίδια (Ε10)
+ \itemΚόλληση ετικετών στις συσκευασίας χαρτόκουτου (Ε11)
+  \itemΣυσκευασία των φιαλιδίων σε χαρτόκουτα (Ε12)
+\end{itemize}
+\\
+Θεωρήστε ότι για τις άνω αναφερόμενες εργασίες, η γραμμή παραγωγής προγραμματίζεται για την απαιτούμενη
+παραγόμενη ποσότητα φιαλιδίων με φάρμακο. Ακολουθεί η παραγωγή της ανάλογης ποσότητας, σύμφωνα με τον
+προγραμματισμό της παραγόμενης ποσότητας, των γυάλινων φιαλιδίων, των καπακιών, των ετικετών φιαλιδίων και
+των χαρτόκουτων συσκευασίας. Απολυμαίνονται τα γυάλινα φιαλίδια και τα καπάκια. Εισάγεται ο ορός στα φιαλίδιακαι στη συνέχεια η δραστική ουσία σε αυτά. Τοποθετούνται τα καπάκια στα φιαλίδια και μετά επικολλάται η ετικέτατους. Επικολλώνται οι ετικέτες στα χαρτόκουτα συσκευασίας και πραγματοποιείται η συσκευασία ανά 12-άδες των φιαλιδίων με φάρμακο σε χαρτόκουτα.
+\\
+
+\begin{itemize}
+    \item [a)]Να σχεδιάσετε το γράφημα προτεραιότητας (precedence graph) που περιγράφει την εκτέλεση των ανωτέρω εργασιών με βάση τους περιορισμούς που προαναφέρθηκαν. (4 Μονάδες)
+    \newpage
+     \begin{center}
+    \resizebox {.7\textwidth } {!} {
+     \begin{tikzpicture}[nodes={draw, circle}, ->]
+       \node{E1}
+        child { node[name=E2] {E2}}
+        child { node {E3} 
+         child {node [left=0.4cm][name=E6] {E6}
+           child { node {E7}  
+             child { node {E8} 
+              child { node {E9}
+               child { node[right=1.6cm][name=E10] {E10}
+                child {node[right=0.6cm][name=E12] {E12}}}}}}}} 
+        child { node[name=E4] {E4} }
+        child { node {E5} 
+         child {node[name=E11] {E11}}
+         };
+         
+       \draw (E2) edge (E6);
+        \draw (E4) edge (E10);
+         \draw (E11) edge (E12);
+         
+     \end{tikzpicture}
+     }
+    
+   \end{center}
+    \newpage
+    \item [b)] Να δώσετε τον παράλληλο ψευδοκώδικα συγχρονισμού των ανωτέρω εργασιών, χωρίς τη χρήση σημαφόρων. (3 Μονάδες)
+    \\
+    \begin{otherlanguage}{english}
+      \begin{lstlisting}
+        
+    E1
+    Cobegin
+      Begin
+         Cobegin
+          Begin
+            Cobegin
+             E2
+             E3
+            Coend
+           E6
+           E7
+           E8
+           E8
+           End
+         E4
+         Coend
+       E10
+       End
+      Begin
+       E5
+       E11
+      End
+    Coend
+    E12
+     \end{lstlisting}
+     \end{otherlanguage}
+  \item [g)] Να δώσετε, βασιζόμενοι στο γράφο προτεραιότητας που σχεδιάσατε και χρησιμοποιώντας κατάλληλους σημαφόρους, τον ψευδοκώδικα συγχρονισμού των ανωτέρω εργασιών. (3 Μονάδες)
+  \\
+     
+     \begin{otherlanguage}{english}
+
+        Abstract Pseudo-code
+        
+        var s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14 : semaphores;
+        \\
+        
+        s1 = s2 = s3 = s4 = s5 = s6 = s7 = s8 = s9 = s10 = s11 = s12 = s13 = s14 = 0;
+        \\          
+        
+       cobegin
+       \begin{sem}
+        \item[] E1:begin up(s1);up(s2);up(s3);up(s4);E1;end;
+        \item[] E2:begin down(s1);E2;up(s5)end;
+        \item[] E3:begin down(s2);E3;up(s6);end;
+        \item[] E4:begin down(s3);E4;up(s11);end;
+        \item[] E5:begin down(s4);E5;up(s12);end;
+        \item[] E6:begin down(s5);down(s6);E6;up(s7);end;
+        \item[] E7:begin down(s7);E7;up(s8);end;
+        \item[] E8:begin down(s8);E8;up(s9);end;
+        \item[] E9:begin down(s9);E9;up(s10);end;
+        \item[] E10:begin down(s10);down(s11);E10;up(s14);end;
+        \item[] E11:begin down(s12);E11;up(s13);end;
+        \item[] E12:begin down(s13);down(s14);E12;end;
+      \end{sem}
+      \\end;
+      \\\begin{multicols}{2}
+\\Process E1
+\begin{lstlisting}
+
+ repeat
+   repeat 12 times
+    print('E1')
+   forever
+  up(S2);
+  up(S3);
+  up(S4);
+ forever;
+\end{lstlisting}
+
+\\Process E2
+\begin{lstlisting}
+ repeat
+  down(S1);
+   repeat 12 times
+    print('E2')
+   forever
+  up(S5);
+ forever;
+\end{lstlisting}
+
+
+\\Process E3
+\begin{lstlisting}
+ repeat
+  down(S2);
+   repeat 12 times
+    print('E3')
+   forever
+  up(S6);
+ forever;
+\end{lstlisting}
+
+\\Process E4
+\begin{lstlisting}
+ repeat
+  down(S3);
+   repeat 12 times
+    print('E4')
+   forever
+  up(S11);
+ forever;
+\end{lstlisting}
+
+\\Process E5
+\begin{lstlisting}
+ repeat
+  down(S4);
+   repeat 12 times
+    print('E5')
+   forever
+  up(S12);
+ forever;
+\end{lstlisting}
+
+
+\\Process E6
+\begin{lstlisting}
+ repeat
+  down(S5);
+  down(S6);
+   repeat 12 times
+    print('E6')
+   forever
+  up(S7);
+ forever;
+\end{lstlisting}
+
+\\Process E7
+\begin{lstlisting}
+ repeat
+  down(S7);
+   repeat 12 times
+    print('E7')
+   forever
+  up(S8);
+ forever;
+\end{lstlisting}
+
+\\Process E8
+\begin{lstlisting}
+ repeat
+  down(S8);
+   repeat 12 times
+    print('E8')
+   forever
+  up(S9);
+ forever;
+\end{lstlisting}
+
+\\Process E9
+\begin{lstlisting}
+ repeat
+  down(S9);
+   repeat 12 times
+    print('E9')
+   forever
+  up(S10);
+ forever;
+\end{lstlisting}
+
+
+\\Process E10
+\begin{lstlisting}
+ repeat
+  down(S10);
+  down(S11);
+   repeat 12 times
+    print('E10')
+   forever
+  up(S14);
+ forever;
+\end{lstlisting}
+
+\\Process E11
+\begin{lstlisting}
+ repeat
+  down(S12);
+   repeat 12 times
+    print('E11')
+   forever
+  up(S13);
+ forever;
+\end{lstlisting}
+
+\\Process E12
+\begin{lstlisting}
+ repeat
+  down(S13);
+  down(s14);
+    print('E11')
+ forever;
+\end{multicols}
+\end{lstlisting}
+\end{multicols}
+\end{otherlanguage}
+\\
+
+\item [(δ)]Χρησιμοποιήστε το ελάχιστο πλήθος σημαφόρων και ορθές αρχικοποιήσεις σε αυτούς (5 Μονάδες)
+
+\begin{otherlanguage}{english}
+
+        Abstract Pseudo-code
+        
+        var s1, s2, s3, s4, s5, s6, s7, s8 : semaphores;
+        \\
+        
+        s1 = s2 = s3 = s4 = s5 = s6 = s7 = s8  = 0;
+        \\          
+        
+       cobegin
+       \begin{sem}
+        \item[] E1:begin up(s1);E1;end;
+        \item[] E2:begin down(s1);E2;up(s2)end;
+        \item[] E3:begin down(s1);E3;up(s2);end;
+        \item[] E4:begin down(s1);E4;up(s6);end;
+        \item[] E5:begin down(s1);E5;up(s7);end;
+        \item[] E6:begin down(s2);E6;up(s3);end;
+        \item[] E7:begin down(s3);E7;up(s4);end;
+        \item[] E8:begin down(s4);E8;up(s5);end;
+        \item[] E9:begin down(s5);E9;up(s6);end;
+        \item[] E10:begin down(s6);E10;up(s8);end;
+        \item[] E11:begin down(s7);E11;up(s8);end;
+        \item[] E12:begin down(s8);E12;end;
+      \end{sem}
+      \\end;
+      \\\begin{multicols}{2}
+\\Process E1
+\begin{lstlisting}
+ repeat
+   repeat 12 times
+    print('E1')
+   forever
+  up(S1);
+ forever;
+\end{lstlisting}
+
+\\Process E2
+\begin{lstlisting}
+ repeat
+  down(S1);
+   repeat 12 times
+    print('E2')
+   forever
+  up(S2);
+ forever;
+\end{lstlisting}
+
+
+\\Process E3
+\begin{lstlisting}
+ repeat
+  down(S1);
+   repeat 12 times
+    print('E3')
+   forever
+  up(S2);
+ forever;
+\end{lstlisting}
+
+\\Process E4
+\begin{lstlisting}
+ repeat
+  down(S1);
+   repeat 12 times
+    print('E4')
+   forever
+  up(S6);
+ forever;
+\end{lstlisting}
+
+\\Process E5
+\begin{lstlisting}
+ repeat
+  down(S1);
+   repeat 12 times
+    print('E5')
+   forever
+  up(S7);
+ forever;
+\end{lstlisting}
+
+
+\\Process E6
+\begin{lstlisting}
+ repeat
+  down(S2);
+   repeat 12 times
+    print('E6')
+   forever
+  up(S3);
+ forever;
+\end{lstlisting}
+
+\\Process E7
+\begin{lstlisting}
+ repeat
+  down(S3);
+   repeat 12 times
+    print('E7')
+   forever
+  up(S4);
+ forever;
+\end{lstlisting}
+
+\\Process E8
+\begin{lstlisting}
+ repeat
+  down(S4);
+   repeat 12 times
+    print('E8')
+   forever
+  up(S5);
+ forever;
+\end{lstlisting}
+
+\\Process E9
+\begin{lstlisting}
+ repeat
+  down(S5);
+   repeat 12 times
+    print('E9')
+   forever
+  up(S6);
+ forever;
+\end{lstlisting}
+
+
+\\Process E10
+\begin{lstlisting}
+ repeat
+  down(S6);
+   repeat 12 times
+    print('E10')
+   forever
+  up(S8);
+ forever;
+\end{lstlisting}
+
+\\Process E11
+\begin{lstlisting}
+ repeat
+  down(S7);
+   repeat 12 times
+    print('E11')
+   forever
+  up(S8);
+ forever;
+\end{lstlisting}
+
+\\Process E12
+\begin{lstlisting}
+ repeat
+  down(S8);
+    print('E11')
+ forever;
+\end{multicols}
+\end{lstlisting}
+\end{multicols}
+\end{otherlanguage}
+
+
+\end{itemize}
+\end{document}
